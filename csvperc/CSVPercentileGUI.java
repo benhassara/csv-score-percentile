@@ -128,9 +128,12 @@ public class CSVPercentileGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    /*
+     * Open btn handler.
+     * opens a FileChooser to pick a .csv for processing
+    */
     private void btnOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenActionPerformed
-        // Open FileChooser dialog to pick a CSV to process
         
         int userChoice = fc.showOpenDialog(this);
         
@@ -143,9 +146,12 @@ public class CSVPercentileGUI extends javax.swing.JFrame {
             log.append("No file selected." + '\n');
         }
     }//GEN-LAST:event_btnOpenActionPerformed
-
+    
+    /*
+     * Save btn handler.
+     * opens a FileChooser to determine save location for the .csv
+     */
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // use FileChooser to determine save location for CSV
         
         int userChoice = fc.showSaveDialog(this);
         
@@ -158,14 +164,17 @@ public class CSVPercentileGUI extends javax.swing.JFrame {
             log.append("No save location selected." + '\n');
         }
     }//GEN-LAST:event_btnSaveActionPerformed
-
+    
+    /*
+     * Convert button handler.
+     * Reads data into a PercData object, and writes to a .csv
+     */
     private void btnConvertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConvertActionPerformed
-        // Read data into PercData object, deliver CSV file at the end
 
         PercData data = new PercData();
         BufferedReader reader;
-        String os = System.getProperty("os.name");
         
+        // read in the list of scores and add them to PercData obj
         try {
             String line;
             reader = new BufferedReader(new FileReader(toOpen));
@@ -180,9 +189,7 @@ public class CSVPercentileGUI extends javax.swing.JFrame {
         Map<String, Integer> percs = data.getPercentiles();
         ArrayList<Integer> sortedScores = data.sort();
         
-//        for (Integer score : sortedScores) {
-//            log.append(score.toString() + ',' + percs.get(score.toString()) + '\n');
-//        }
+        // write to a .csv
         try (Writer writer = new BufferedWriter(
                              new OutputStreamWriter(
                              new FileOutputStream(saveTo.getAbsolutePath()), "utf-8"))) {
