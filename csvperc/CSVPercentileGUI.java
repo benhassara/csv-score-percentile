@@ -6,9 +6,13 @@
 package csvperc;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JFileChooser;
@@ -170,14 +174,31 @@ public class CSVPercentileGUI extends javax.swing.JFrame {
             }
         }
         catch (IOException err) {
-            log.append("Error opening file: " + toOpen.getPath());
+            log.append("Error opening file: " + toOpen.getPath() + '\n');
         }
         
         Map<String, Integer> percs = data.getPercentiles();
         ArrayList<Integer> sortedScores = data.sort();
         
-        for (Integer score : sortedScores) {
-            log.append(score.toString() + ',' + percs.get(score.toString()) + '\n');
+//        for (Integer score : sortedScores) {
+//            log.append(score.toString() + ',' + percs.get(score.toString()) + '\n');
+//        }
+        try (Writer writer = new BufferedWriter(
+                             new OutputStreamWriter(
+                             new FileOutputStream(saveTo.getAbsolutePath()), "utf-8"))) {
+            // write column headers first
+            writer.write("Score,Percentile Rank" + '\n');
+            
+            // iterate over percentile data, and write to file
+            for (Integer score: sortedScores) {
+                String line = score.toString() + ',' + percs.get(score.toString()) + '\n';
+                writer.write(line);
+            }
+            writer.close();
+            log.append("Success!" + '\n');
+        }
+        catch (IOException err) {
+            log.append("Error writing to file: " + saveTo.getPath() + '\n');
         }
         
     }//GEN-LAST:event_btnConvertActionPerformed
