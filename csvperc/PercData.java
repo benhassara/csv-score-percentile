@@ -74,7 +74,6 @@ public class PercData {
         
         this.sort();
         
-//        for (int i = this.scores.size() - 1; i >= 0; i--) {
         for (int i = 0; i < this.scores.size(); i++) {
             
             String key = this.scores.get(i).toString();
@@ -90,18 +89,15 @@ public class PercData {
                 // cf = cumulative freq
                 int cf = 0;
                 ArrayList<Integer> slice = new ArrayList<>();
-                slice.addAll(this.scores.subList(i, this.scores.size()));
+                slice.addAll(this.scores.subList(0, i + 1));
             
                 // iterate over sublist of unique scores to reduce into cumulative frequency
-//                for (int intScore : this.scores.subList(0, i)) {
-//                    cf += this.freqs.get(Integer.toString(intScore));
-//                }
                 for (int j = 0; j < slice.size(); j++) {
                     cf += this.freqs.get(slice.get(j).toString());
                 }                
             
                 // calc percentile rank
-                int percRank = Math.round(((float)cf / n) * 100);
+                int percRank = Math.round(100 - (((float)cf / (float)n) * 100));
             
                 // add to hashmap with score as key
                 output.put(this.scores.get(i).toString(), percRank);
